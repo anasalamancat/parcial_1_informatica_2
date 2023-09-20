@@ -52,3 +52,26 @@
             }
         }
     }
+
+//FUNCIÓN DEL PATRÓN 2. PONE VUN VALOR DE 1 EN LAS POSICIONES DE LOS LEDS QUE DEBEN IR ENCENDIDOS SIGUIENDO LA LÓGICA DEL PATRÓN ---------------------------------------------------------------------
+
+        void matriz_binaria_patron2(int **matriz,int filas,int columnas){
+            int tam=8;
+            int ultima=tam-1;
+            int primera=0;
+        
+            for(int i=0;i<tam;i++){
+                if(i<4){
+                    matriz[i][primera]=1;
+                    matriz[i][ultima]=1;
+                    primera++;
+                    ultima--;
+                }
+                else{
+                    primera--;
+                    ultima++;
+                    matriz[i][primera]=1;
+                    matriz[i][ultima]=1;
+                }
+            }
+        }
