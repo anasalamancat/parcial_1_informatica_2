@@ -1,6 +1,6 @@
 //Código Del parcial 1
 
-//Lineas de código donde se declara e inicializa la matriz 8x8:
+//LINEAS DE CÓDIGO DONDE SE DECLARA E INICIALIZA LA MATRIZ 8X8:-----------------------------------------------------------------------------------------------------
 
     int filas=8;
     int columnas=8;
@@ -10,13 +10,45 @@
     }
     crear_matriz_incial(matriz,filas,columnas);
 
-//Función que se encarga de darle los valores iniciales a la matriz, todos los valores serán 0
+//NO SE DEBE OLVIDAR ELIMINAR LA MATRIZ AL FINAL PARA QUE LIBERE LOS ESPACIOS DE MEMORIA-------------------------------------------------------------
+
+    for(int j=0;j<filas;j++){ 
+        delete[]matriz[j];
+    }                   
+    delete[]matriz;
+
+//FUNCIÓN QUE SE ENCARGA DE DARLE LOS VALORES INICIALES A LA MATRIIZ. TODOS LOS VALORES SERÁN 0 ------------------------------------------------------------------------
 
     void crear_matriz_incial(int** matriz,int num_filas,int num_columnas)
     {
         for(int filas=0;filas<num_filas;filas++){
             for(int columnas=0;columnas<num_columnas;columnas++){
                 matriz[filas][columnas]=0;
+            }
+        }
+    }
+
+//FUNCIÓN DEL PATRÓN 1. PONE UN VALOR DE 1 EN LAS POSICIONES DE LOS LEDS QUE DEBEN IR ENCENDIDOS SIGUIENDO LA LÓGICA DEL PATRÓN----------------------------------------------------
+
+    void matriz_binaria_patron1(int **matriz, int num_filas,int num_columnas){
+        int tam=8;
+        int primera=(tam/2)-1;
+        int ultima=tam/2;
+    
+    
+        for(int i=0;i<tam;i++){
+            if(i>=4){
+                primera++;
+                ultima-=1;
+            }
+            for(int j=0;j<tam;j++){
+                if(j>=primera && j<=ultima){
+                    matriz[i][j]=1;
+                }
+            }
+            if(i<4){
+                primera-=1;
+                ultima++;
             }
         }
     }
