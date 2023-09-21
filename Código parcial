@@ -122,3 +122,38 @@
     delay(tiempo);
   }
 }
+
+void imprimir_patrones(int tiempo,int veces,int**matriz,int* valores_decimales,int filas,int columnas){
+  for(int cont=0;cont<veces;cont++){
+    for(int num_patrones=0;num_patrones<4;num_patrones++){
+      if(num_patrones==1){
+        crear_matriz_incial(matriz,filas,columnas);
+        matriz_binaria_patron1(matriz,filas,columnas);
+        convertir_binario_a_decimal(matriz,valores_decimales);
+      } 
+      else if(num_patrones==2){
+        crear_matriz_incial(matriz,filas,columnas);
+        matriz_binaria_patron2(matriz,filas,columnas);
+        convertir_binario_a_decimal(matriz,valores_decimales);
+      }
+       /* PARTES DE EDUARDO-------------------------------
+       else if(num_patrones==3){
+         
+       //}
+       //else if(num_patrones==4){
+         
+	}--------------------------------------------------*/
+      int a=valores_decimales[0];
+      int b=valores_decimales[1];
+      int c=valores_decimales[2];
+      int d=valores_decimales[3];
+      int e=valores_decimales[4];
+      int f=valores_decimales[5];
+      int g=valores_decimales[6];
+      int h=valores_decimales[7];
+
+      ledWrite(a,b,c,d,e,f,g,h);
+      delay(tiempo);
+    }
+  }  
+}
