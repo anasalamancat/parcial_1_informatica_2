@@ -112,3 +112,13 @@
                 arreglo_decimales[i]=suma_actual;
             }
         }
+
+//FUNCIÓN VERIFICAR- LA QUE SE ENCARGA DE ENCENDER TODOS LOS LEDS DETERMINADA CANTIDAD DE VECES Y CADA CIERTO TIEMPO
+    void verificar(int tiempo, int veces){
+  for(int i=0;i<veces;i++){
+	ledWrite(255,255,255,255,255,255,255,255);
+    delay(tiempo);
+    ledWrite(0,0,0,0,0,0,0,0);
+    delay(tiempo);
+  }
+}
