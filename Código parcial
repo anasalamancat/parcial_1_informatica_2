@@ -75,3 +75,40 @@
                 }
             }
         }
+
+//FUNCIÓN QUE RECORRE LA MATRIZ BIDIMENSIONAL Y CONVIERTE CADA ARREGLO BINARIO A SU EQUIVALENTE DECIMAL GUARDANDO CADA EQUIVALENTE EN UNA POSICION DE UN ARREGLO
+
+        void convertir_binario_a_decimal(int**matriz,int*arreglo_decimales){
+        
+            int tam=8;
+            int cont_potencia=0;
+            int suma_actual=0;
+            int veces_multiplicadas=0;
+            int potencia_actual=0;
+        
+            for(int i=0;i<tam;i++){
+                cont_potencia=0;
+                suma_actual=0;
+                for(int j=7;j>=0;j--){
+                    if(matriz[i][j]==1){
+                        if(j==7){
+                            suma_actual++;
+                        }
+                        else{
+                            veces_multiplicadas=0;
+                            potencia_actual=1;
+                            while(veces_multiplicadas<cont_potencia){
+                                potencia_actual=(potencia_actual*2);
+                                veces_multiplicadas++;
+                            }
+                            suma_actual+=potencia_actual;
+                        }
+                    }
+                    else{
+                        arreglo_decimales[i]=0;
+                    }
+                cont_potencia++;
+                }
+                arreglo_decimales[i]=suma_actual;
+            }
+        }
