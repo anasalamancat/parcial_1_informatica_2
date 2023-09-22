@@ -36,13 +36,6 @@ void matriz_binaria_patron1(int **matriz, int num_filas,int num_columnas){
             ultima++;
         }
     }
-    /*for(int filas=0;filas<num_filas;filas++){
-        for(int columnas=0;columnas<num_columnas;columnas++){
-            cout<< matriz[filas][columnas];
-        }
-        cout<<endl;
-    }
-    */
 }
 
 void matriz_binaria_patron2(int **matriz,int filas,int columnas){
@@ -63,7 +56,6 @@ void matriz_binaria_patron2(int **matriz,int filas,int columnas){
             matriz[i][ultima]=1;
         }
     }
-    
 }
 
 
@@ -249,6 +241,7 @@ void loop(){
   }
   int* valores_decimales=new int[8]; //declarar arreglo donde irán los patrones en decimal
   
+  Serial.print("BIENVENIDO/A!!! \n");
   accion= publik();
   
   if(accion==1){
@@ -289,7 +282,7 @@ void loop(){
   }
   
   
-  
+  Serial.print("\n\n*EJECUCION FINALIZADA*\n------------------------------\n");
   
   for(int j=0;j<filas;j++){ //Eliminar espacio reservado en el heap
         delete[]matriz[j];
