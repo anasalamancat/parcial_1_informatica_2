@@ -1,10 +1,6 @@
-//ESTA ES LA MANERA EN QUE ESTÄ ORGANIZADO EL CÓDIGO EN TINKERCAD
-
 int pinData  = 10;
 int pinLatch = 11;
 int pinClock = 12;
-//int opcion;
-#define TIEMPO 200000
 void setup(){
    Serial.begin(9600);
    pinMode(pinData, OUTPUT);
@@ -190,23 +186,23 @@ void verificar(int tiempo, int veces){
 void imprimir_patrones(int tiempo,int veces,int**matriz,int* valores_decimales,int filas,int columnas){
   for(int cont=0;cont<veces;cont++){
     for(int num_patrones=0;num_patrones<4;num_patrones++){
-      if(num_patrones==1){
+      if(num_patrones==0){
         crear_matriz_incial(matriz,filas,columnas);
         matriz_binaria_patron1(matriz,filas,columnas);
         convertir_binario_a_decimal(matriz,valores_decimales);
       } 
-      else if(num_patrones==2){
+      else if(num_patrones==1){
         crear_matriz_incial(matriz,filas,columnas);
         matriz_binaria_patron2(matriz,filas,columnas);
         convertir_binario_a_decimal(matriz,valores_decimales);
       }
        
-      else if(num_patrones==3){
+      else if(num_patrones==2){
         crear_matriz_incial(matriz,filas,columnas);
         matriz_binaria_patron3(matriz,filas,columnas);
         convertir_binario_a_decimal(matriz,valores_decimales);
        }
-       //else if(num_patrones==4){
+       //else if(num_patrones==3){
          
        //}
       int a=valores_decimales[0];
@@ -224,24 +220,27 @@ void imprimir_patrones(int tiempo,int veces,int**matriz,int* valores_decimales,i
   }
   
 }
-void publik()//-----------------------------------CORREGIR -------------------
+int publik()
 {
-  	Serial.print("ingrese valor:");
-	int incomingByte = 0;
-  if (Serial.available() > 0) { 
-    incomingByte = Serial.read();
-    Serial.print("I received: ");
-    Serial.println(incomingByte, DEC);
+  	int eleccion;
+  	Serial.println("Ingrese el numero de la opcion que desea realizar:");
+  	Serial.println("1. Verificar el funcionamiento de los leds");
+  	Serial.println("2. Mostrar imagen personalizada");
+  	Serial.println("3. Mostrar alternadamente los 4 patrones predefnidos");
+	
+  while(Serial.available() == 0) { 
   }
+    eleccion = Serial.parseInt();
+    Serial.print("escogiste: ");
+  	Serial.print(eleccion);
     
-  
+  return eleccion;
 } 
 //------------------------------------------------------------------------------------------
 
 
-
 void loop(){
-  
+  int accion;
   int filas=8; 
   int columnas=8;
   int **matriz= new int*[filas]; //declarar matriz 8x8
@@ -250,11 +249,47 @@ void loop(){
   }
   int* valores_decimales=new int[8]; //declarar arreglo donde irán los patrones en decimal
   
-  publik();
+  accion= publik();
+  
+  if(accion==1){
+    int tiempo;
+    int veces;
+    Serial.print('\n');
+    Serial.print("Ingrese cuantos segundos desea entre cada encendido y apagado:");
+    while(Serial.available() == 0) { 
+  	}
+    tiempo = Serial.parseInt();
+    Serial.println(tiempo);
+    tiempo=tiempo*1000;
+    Serial.print("Ingrese cuantas veces desea que se enciendan:");
+    while(Serial.available() == 0) { 
+  	}
+    veces = Serial.parseInt();
+    Serial.println(veces);
+   	verificar(tiempo,veces);
+    
+  }
+  
+  else if(accion==3){
+    int tiempo;
+    int veces;
+    Serial.print('\n');
+    Serial.print("Ingrese cuantos segundos de retardo desea entre cada patron:");
+    while(Serial.available() == 0) { 
+  	}
+    tiempo = Serial.parseInt();
+    Serial.println(tiempo);
+    tiempo=tiempo*1000;
+    Serial.print("Ingrese cuantas veces desea mostrar los patrones:");
+    while(Serial.available() == 0) { 
+  	}
+    veces = Serial.parseInt();
+    Serial.println(veces);
+    imprimir_patrones(tiempo,veces,matriz,valores_decimales,filas,columnas);
+  }
   
   
-  verificar(1000,3);
-  imprimir_patrones(1000,2,matriz,valores_decimales,filas,columnas);
+  
   
   for(int j=0;j<filas;j++){ //Eliminar espacio reservado en el heap
         delete[]matriz[j];
