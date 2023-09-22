@@ -1,0 +1,265 @@
+//ESTA ES LA MANERA EN QUE ESTÄ ORGANIZADO EL CÓDIGO EN TINKERCAD
+
+int pinData  = 10;
+int pinLatch = 11;
+int pinClock = 12;
+//int opcion;
+#define TIEMPO 200000
+void setup(){
+   Serial.begin(9600);
+   pinMode(pinData, OUTPUT);
+   pinMode(pinLatch, OUTPUT);
+   pinMode(pinClock, OUTPUT);
+}
+
+void crear_matriz_incial(int** matriz,int num_filas,int num_columnas)
+{
+    for(int filas=0;filas<num_filas;filas++){
+        for(int columnas=0;columnas<num_columnas;columnas++){
+            matriz[filas][columnas]=0;
+        }
+    }
+}
+
+void matriz_binaria_patron1(int **matriz, int num_filas,int num_columnas){
+    int tam=8;
+    int primera=(tam/2)-1;
+    int ultima=tam/2;
+    for(int i=0;i<tam;i++){
+        if(i>=4){
+            primera++;
+            ultima-=1;
+        }
+        for(int j=0;j<tam;j++){
+            if(j>=primera && j<=ultima){
+                matriz[i][j]=1;
+            }
+        }
+        if(i<4){
+            primera-=1;
+            ultima++;
+        }
+    }
+    /*for(int filas=0;filas<num_filas;filas++){
+        for(int columnas=0;columnas<num_columnas;columnas++){
+            cout<< matriz[filas][columnas];
+        }
+        cout<<endl;
+    }
+    */
+}
+
+void matriz_binaria_patron2(int **matriz,int filas,int columnas){
+    int tam=8;
+    int ultima=tam-1;
+    int primera=0;
+    for(int i=0;i<tam;i++){
+        if(i<4){
+            matriz[i][primera]=1;
+            matriz[i][ultima]=1;
+            primera++;
+            ultima--;
+        }
+        else{
+            primera--;
+            ultima++;
+            matriz[i][primera]=1;
+            matriz[i][ultima]=1;
+        }
+    }
+    
+}
+
+
+void matriz_binaria_patron3(int **matriz, int num_filas, int num_columnas){
+    int x = 0;
+    int z = 2;
+    for (int i = 0; i < num_filas; i++) {
+        if (x < z){
+            int y = 0;
+            int w = 2;
+            for (int j = 0; j < num_columnas; j++){
+                if(y < w){
+                    matriz[i][j] = 1;
+                    y++;
+                }
+                else{
+                    matriz[i][j] = 0;
+                    w += 2;
+                }
+            }
+            x++;
+        }
+        else{
+            z = 3;
+            if(x < z){
+                int y = 0;
+                int w = 1;
+                for(int j = 0; j < num_columnas; j++){
+                    if (y < w){
+                        matriz[i][j] = 0;
+                        y += 2;
+                    }
+                    else{
+                        matriz[i][j] = 1;
+                        w ++;
+                    }
+                }
+                x++;
+            }
+            else{
+                int y = 0;
+                int w = 1;
+                for(int j = 0; j < num_columnas; j++){
+                    if (y < w){
+                        matriz[i][j] = 0;
+                        y += 2;
+                    }
+                    else{
+                        matriz[i][j] = 1;
+                        w ++;
+                    }
+                }
+                x = 0;
+            }
+            z = 2;
+        }
+    }
+}
+
+
+void convertir_binario_a_decimal(int**matriz,int*arreglo_decimales){
+
+    int tam=8;
+    int cont_potencia=0;
+    int suma_actual=0;
+    int veces_multiplicadas=0;
+    int potencia_actual=0;
+
+    for(int i=0;i<tam;i++){
+        cont_potencia=0;
+        suma_actual=0;
+        for(int j=7;j>=0;j--){
+            if(matriz[i][j]==1){
+                if(j==7){
+                    suma_actual++;
+                }
+                else{
+                    veces_multiplicadas=0;
+                    potencia_actual=1;
+                    while(veces_multiplicadas<cont_potencia){
+                        potencia_actual=(potencia_actual*2);
+                        veces_multiplicadas++;
+                    }
+                    suma_actual+=potencia_actual;
+                }
+            }
+            else{
+                arreglo_decimales[i]=0;
+            }
+        cont_potencia++;
+        }
+        arreglo_decimales[i]=suma_actual;
+    }
+}
+
+void encender_leds(int fila1, int fila2, int fila3, int fila4, int fila5, int fila6, int fila7, int fila8)
+{
+   shiftOut(pinData, pinClock, LSBFIRST, fila1);
+   shiftOut(pinData, pinClock, LSBFIRST, fila2);
+   shiftOut(pinData, pinClock, LSBFIRST, fila3);
+  	shiftOut(pinData, pinClock, LSBFIRST, fila4);
+  	shiftOut(pinData, pinClock, LSBFIRST, fila5);
+  	shiftOut(pinData, pinClock, LSBFIRST, fila6);
+  	shiftOut(pinData, pinClock, LSBFIRST, fila7);
+  	shiftOut(pinData, pinClock, LSBFIRST, fila8);
+   digitalWrite(pinLatch, HIGH);
+   digitalWrite(pinLatch, LOW);
+}
+
+void verificar(int tiempo, int veces){
+  for(int i=0;i<veces;i++){
+	encender_leds(255,255,255,255,255,255,255,255);
+    delay(tiempo);
+    encender_leds(0,0,0,0,0,0,0,0);
+    delay(tiempo);
+  }
+  
+}
+
+void imprimir_patrones(int tiempo,int veces,int**matriz,int* valores_decimales,int filas,int columnas){
+  for(int cont=0;cont<veces;cont++){
+    for(int num_patrones=0;num_patrones<4;num_patrones++){
+      if(num_patrones==1){
+        crear_matriz_incial(matriz,filas,columnas);
+        matriz_binaria_patron1(matriz,filas,columnas);
+        convertir_binario_a_decimal(matriz,valores_decimales);
+      } 
+      else if(num_patrones==2){
+        crear_matriz_incial(matriz,filas,columnas);
+        matriz_binaria_patron2(matriz,filas,columnas);
+        convertir_binario_a_decimal(matriz,valores_decimales);
+      }
+       
+      else if(num_patrones==3){
+        crear_matriz_incial(matriz,filas,columnas);
+        matriz_binaria_patron3(matriz,filas,columnas);
+        convertir_binario_a_decimal(matriz,valores_decimales);
+       }
+       //else if(num_patrones==4){
+         
+       //}
+      int a=valores_decimales[0];
+      int b=valores_decimales[1];
+      int c=valores_decimales[2];
+      int d=valores_decimales[3];
+      int e=valores_decimales[4];
+      int f=valores_decimales[5];
+      int g=valores_decimales[6];
+      int h=valores_decimales[7];
+
+      encender_leds(a,b,c,d,e,f,g,h);
+      delay(tiempo);
+    }
+  }
+  
+}
+void publik()//-----------------------------------CORREGIR -------------------
+{
+  	Serial.print("ingrese valor:");
+	int incomingByte = 0;
+  if (Serial.available() > 0) { 
+    incomingByte = Serial.read();
+    Serial.print("I received: ");
+    Serial.println(incomingByte, DEC);
+  }
+    
+  
+} 
+//------------------------------------------------------------------------------------------
+
+
+
+void loop(){
+  
+  int filas=8; 
+  int columnas=8;
+  int **matriz= new int*[filas]; //declarar matriz 8x8
+  for (int i=0;i<filas;i++){	//reservar espacios para las columnas (arreglos internos)
+        matriz[i]=new int[columnas];
+  }
+  int* valores_decimales=new int[8]; //declarar arreglo donde irán los patrones en decimal
+  
+  publik();
+  
+  
+  verificar(1000,3);
+  imprimir_patrones(1000,2,matriz,valores_decimales,filas,columnas);
+  
+  for(int j=0;j<filas;j++){ //Eliminar espacio reservado en el heap
+        delete[]matriz[j];
+    }
+   delete[]matriz;
+   delete[]valores_decimales;
+
+}
