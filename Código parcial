@@ -159,3 +159,60 @@
 	    }
 	  }  
 	}
+//FUNCION DEL PATRÓN 3, PONE UN UNO EN LA POSICION DONDE DEBEN IR ENCENDIDOS LOS LEDS, SEGUN LA LOGICA DEL PATRON---------------------------------------------------
+
+void matriz_binaria_patron3(int **matriz, int num_filas, int num_columnas){
+    int x = 0;
+    int z = 2;
+    for (int i = 0; i < num_filas; i++) {
+        if (x < z){
+            int y = 0;
+            int w = 2;
+            for (int j = 0; j < num_columnas; j++){
+                if(y < w){
+                    matriz[i][j] = 1;
+                    y++;
+                }
+                else{
+                    matriz[i][j] = 0;
+                    w += 2;
+                }
+            }
+            x++;
+        }
+        else{
+            z = 3;
+            if(x < z){
+                int y = 0;
+                int w = 1;
+                for(int j = 0; j < num_columnas; j++){
+                    if (y < w){
+                        matriz[i][j] = 0;
+                        y += 2;
+                    }
+                    else{
+                        matriz[i][j] = 1;
+                        w ++;
+                    }
+                }
+                x++;
+            }
+            else{
+                int y = 0;
+                int w = 1;
+                for(int j = 0; j < num_columnas; j++){
+                    if (y < w){
+                        matriz[i][j] = 0;
+                        y += 2;
+                    }
+                    else{
+                        matriz[i][j] = 1;
+                        w ++;
+                    }
+                }
+                x = 0;
+            }
+            z = 2;
+        }
+    }
+}
