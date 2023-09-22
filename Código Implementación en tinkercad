@@ -115,6 +115,24 @@ void matriz_binaria_patron3(int **matriz, int num_filas, int num_columnas){
     }
 }
 
+void matriz_binaria_patron4(int **matriz, int num_filas, int num_columnas){
+    int tam = 8;
+    int primera = 0;
+    for(int i = 0; i < tam; i++){
+        if(i < 4){
+            for(int j = 0; j <= 3; j++){
+                matriz[i][primera + j] = 1;
+            }
+            primera ++;
+        }
+        else{
+            primera--;
+            for(int j = 0; j <= 3; j++){
+                matriz[i][primera + j] = 1;
+            }
+        }
+    }        
+}
 
 void convertir_binario_a_decimal(int**matriz,int*arreglo_decimales){
 
@@ -153,14 +171,14 @@ void convertir_binario_a_decimal(int**matriz,int*arreglo_decimales){
 
 void encender_leds(int fila1, int fila2, int fila3, int fila4, int fila5, int fila6, int fila7, int fila8)
 {
-   shiftOut(pinData, pinClock, LSBFIRST, fila1);
-   shiftOut(pinData, pinClock, LSBFIRST, fila2);
+   shiftOut(pinData, pinClock, LSBFIRST, fila8);
+   shiftOut(pinData, pinClock, LSBFIRST, fila7);
+   shiftOut(pinData, pinClock, LSBFIRST, fila6);
+   shiftOut(pinData, pinClock, LSBFIRST, fila5);
+   shiftOut(pinData, pinClock, LSBFIRST, fila4);
    shiftOut(pinData, pinClock, LSBFIRST, fila3);
-  	shiftOut(pinData, pinClock, LSBFIRST, fila4);
-  	shiftOut(pinData, pinClock, LSBFIRST, fila5);
-  	shiftOut(pinData, pinClock, LSBFIRST, fila6);
-  	shiftOut(pinData, pinClock, LSBFIRST, fila7);
-  	shiftOut(pinData, pinClock, LSBFIRST, fila8);
+   shiftOut(pinData, pinClock, LSBFIRST, fila2);
+   shiftOut(pinData, pinClock, LSBFIRST, fila1);
    digitalWrite(pinLatch, HIGH);
    digitalWrite(pinLatch, LOW);
 }
@@ -175,6 +193,71 @@ void verificar(int tiempo, int veces){
   
 }
 
+void personalizada(int* valores_decimales, int tiempo,int veces)
+{
+  char* cadena=new char[8];
+  int tam=8;
+  int cont_potencia=0;
+  int suma_actual=0;
+  int veces_multiplicadas=0;
+  int potencia_actual=0;
+  
+  
+  for (int i=0;i<tam;i++){
+    int mostrar=0;
+    cont_potencia=0;
+    suma_actual=0;
+    Serial.print("\nIngrese los estados de los 8 leds de la fila numero ");
+    Serial.print(i+1);
+    Serial.print(" (1 si es encendido y 0 si es apagado): ");
+    while(Serial.available()==0){
+    } 
+    Serial.readBytesUntil('\n',cadena,8);
+        
+        for(int j=7;j>=0;j--){          
+          Serial.print(cadena[mostrar]);
+          mostrar++;
+          if(cadena[j]==49){
+                if(j==7){
+                    suma_actual++;
+                }
+                else if(j!=7){
+                    veces_multiplicadas=0;
+                    potencia_actual=1;
+                    while(veces_multiplicadas<cont_potencia){
+                        potencia_actual=potencia_actual*2;
+                        veces_multiplicadas++;
+                    }
+                    suma_actual+=potencia_actual;                  	
+                    
+                }
+            
+            else{
+                suma_actual+=0;
+            }             
+        }
+        cont_potencia++;  
+    	valores_decimales[i]=suma_actual;
+    }
+  }
+  
+  for(int cont_veces=0;cont_veces<veces;cont_veces++){
+    int a=valores_decimales[0];
+        int b=valores_decimales[1];
+        int c=valores_decimales[2];
+        int d=valores_decimales[3];
+        int e=valores_decimales[4];
+        int f=valores_decimales[5];
+        int g=valores_decimales[6];
+        int h=valores_decimales[7];
+
+        encender_leds(a,b,c,d,e,f,g,h);
+        delay(tiempo);
+    	encender_leds(0,0,0,0,0,0,0,0);
+    	delay(tiempo);
+  }
+  
+}
 void imprimir_patrones(int tiempo,int veces,int**matriz,int* valores_decimales,int filas,int columnas){
   for(int cont=0;cont<veces;cont++){
     for(int num_patrones=0;num_patrones<4;num_patrones++){
@@ -194,9 +277,11 @@ void imprimir_patrones(int tiempo,int veces,int**matriz,int* valores_decimales,i
         matriz_binaria_patron3(matriz,filas,columnas);
         convertir_binario_a_decimal(matriz,valores_decimales);
        }
-       //else if(num_patrones==3){
-         
-       //}
+       else if(num_patrones==3){
+        crear_matriz_incial(matriz,filas,columnas);
+        matriz_binaria_patron4(matriz,filas,columnas);
+        convertir_binario_a_decimal(matriz,valores_decimales);
+       }
       int a=valores_decimales[0];
       int b=valores_decimales[1];
       int c=valores_decimales[2];
@@ -215,10 +300,10 @@ void imprimir_patrones(int tiempo,int veces,int**matriz,int* valores_decimales,i
 int publik()
 {
   	int eleccion;
-  	Serial.println("Ingrese el numero de la opcion que desea realizar:");
+  	Serial.println("\n Ingrese el numero de la opcion que desea realizar:");
   	Serial.println("1. Verificar el funcionamiento de los leds");
   	Serial.println("2. Mostrar imagen personalizada");
-  	Serial.println("3. Mostrar alternadamente los 4 patrones predefnidos");
+  	Serial.println("3. Mostrar alternadamente los 4 patrones predefinidos");
 	
   while(Serial.available() == 0) { 
   }
@@ -228,6 +313,7 @@ int publik()
     
   return eleccion;
 } 
+
 //------------------------------------------------------------------------------------------
 
 
@@ -259,8 +345,25 @@ void loop(){
   	}
     veces = Serial.parseInt();
     Serial.println(veces);
-   	verificar(tiempo,veces);
-    
+   	verificar(tiempo,veces);  
+  }
+  
+  else if(accion==2){
+    int tiempo;
+    int veces;
+    Serial.print('\n');
+    Serial.print("Ingrese cuantos segundos de retardo desea entre cada patron:");
+    while(Serial.available() == 0) { 
+  	}
+    tiempo = Serial.parseInt();
+    Serial.println(tiempo);
+    tiempo=tiempo*1000;
+    Serial.print("Ingrese cuantas veces desea mostrar el patron:");
+    while(Serial.available() == 0) { 
+  	}
+    veces = Serial.parseInt();
+    Serial.println(veces);
+    personalizada(valores_decimales,tiempo,veces); 
   }
   
   else if(accion==3){
@@ -280,7 +383,9 @@ void loop(){
     Serial.println(veces);
     imprimir_patrones(tiempo,veces,matriz,valores_decimales,filas,columnas);
   }
-  
+  else{
+    Serial.print("\n *EL VALOR INGRESADO NO ES UNA DE LAS OPCIONES*\n");
+  }
   
   Serial.print("\n\n*EJECUCION FINALIZADA*\n------------------------------\n");
   
